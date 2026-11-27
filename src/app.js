@@ -43,11 +43,11 @@ app.post('/api/telemetry', async (req, res) => {
     } catch (e) { console.error('POST telemetry:', e.message); return res.status(503).json({ error: 'Database unavailable' }); }
 });
 app.get('/api/telemetry/latest', async (req, res) => {
-    try { await connectDB(); const item = await Telemetry.findOne({ deviceId: String(req.query.deviceId || 'RESCUE-X-ESP32') }).sort({ receivedAt: -1 }).lean(); return res.json({ item }); }
+    try { res.set('Cache-Control', 'no-store'); await connectDB(); const item = await Telemetry.findOne({ deviceId: String(req.query.deviceId || 'RESCUE-X-ESP32') }).sort({ receivedAt: -1 }).lean(); return res.json({ item }); }
     catch (e) { console.error(e.message); return res.status(503).json({ error: 'Database unavailable' }); }
 });
 app.get('/api/telemetry/history', async (req, res) => {
-    try { await connectDB(); const limit = Math.min(250, Math.max(1, parseInt(req.query.limit) || 100)); const items = await Telemetry.find({ deviceId: String(req.query.deviceId || 'RESCUE-X-ESP32') }).sort({ receivedAt: -1 }).limit(limit).lean(); return res.json({ items: items.reverse() }); }
+    try { res.set('Cache-Control', 'no-store'); await connectDB(); const limit = Math.min(250, Math.max(1, parseInt(req.query.limit) || 100)); const items = await Telemetry.find({ deviceId: String(req.query.deviceId || 'RESCUE-X-ESP32') }).sort({ receivedAt: -1 }).limit(limit).lean(); return res.json({ items: items.reverse() }); }
     catch (e) { console.error(e.message); return res.status(503).json({ error: 'Database unavailable' }); }
 });
 export default app;
