@@ -8,7 +8,7 @@ import Telemetry from './model.js';
 const app=express();
 app.disable('x-powered-by');
 app.use(helmet());
-const origins=(process.env.CORS_ORIGINS||'http://localhost:5173').split(',').map(s=>s.trim());
+const origins=(process.env.CORS_ORIGINS||'http://localhost:5173').split(',').map(s=>s.trim().replace(/\/+$/,'')).filter(Boolean);
 app.use(cors({origin:(origin,cb)=>cb(null,!origin||origins.includes(origin)),methods:['GET','POST','OPTIONS'],allowedHeaders:['Content-Type','x-device-token']}));
 app.use(express.json({limit:'12kb'}));
 app.use('/api',rateLimit({windowMs:60_000,limit:180,standardHeaders:'draft-7',legacyHeaders:false}));
