@@ -15,7 +15,7 @@ const corsOptions = { origin: (origin, cb) => cb(null, !origin || origins.has('*
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json({ limit: '12kb' }));
-app.use('/api', rateLimit({ windowMs: 60_000, limit: 180, standardHeaders: 'draft-7', legacyHeaders: false }));
+app.use('/api', rateLimit({ windowMs: 60_000, limit: 300, standardHeaders: 'draft-7', legacyHeaders: false }));
 app.get('/', (req, res) => res.json({ name: 'RESCUE-X API', status: 'online', simulation: true }));
 app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 function authorized(value) {
